@@ -37,7 +37,7 @@ const Share = () => {
     onSuccess: () => {
       queryClient.invalidateQueries('posts')
     },
-  })
+  });
 
   const handleAddPost = async (e) => {
     e.preventDefault();
