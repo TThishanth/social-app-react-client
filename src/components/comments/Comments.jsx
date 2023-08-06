@@ -37,6 +37,8 @@ const Comments = ({ postId }) => {
     setDescription("");
   }
 
+  console.log(data);
+
   if (isLoading) return 'Loading...'
 
   if (error) return 'An error has occurred: ' + error.message
@@ -50,10 +52,10 @@ const Comments = ({ postId }) => {
       </div>
       {data.map((comment) => (
         <div className="comment">
-          <img src={comment.profilePic} alt="" />
+          <img src={'/upload/' + comment.profilePic} alt="" />
           <div className="info">
             <span>{comment.name}</span>
-            <p>{comment.desc}</p> 
+            <p>{comment.description}</p> 
           </div>
           <span className="date">{moment(comment.createdAt).fromNow()}</span>
         </div>

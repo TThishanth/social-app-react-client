@@ -15,6 +15,7 @@ import { useMutation, useQueryClient, useQuery } from "react-query";
 const Post = ({ post }) => {
 
   const [commentOpen, setCommentOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const { currentUser } = useContext(AuthContext);
 
@@ -44,6 +45,21 @@ const Post = ({ post }) => {
 
   }
 
+  const deleteMutation = useMutation((id) => {
+    return makeRequest.delete("/posts/delete/" + id);
+  }, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('posts')
+    },
+  });
+
+  const handleDelete = (e) => {
+    e.preventDefault();
+
+    deleteMutation.mutate(post.id);
+
+  }
+
   if (isLoading) return 'Loading...'
 
   if (error) return 'An error has occurred: ' + error.message
@@ -53,7 +69,7 @@ const Post = ({ post }) => {
       <div className="container">
         <div className="user">
           <div className="userInfo">
-            <img src={post.profilePic} alt="" />
+            <img src={ '/upload/' + post.profilePic } alt="" />
             <div className="details">
               <Link
                 to={`/profile/${post.userId}`}
@@ -64,7 +80,8 @@ const Post = ({ post }) => {
               <span className="date">{ moment(post.createdAt).fromNow() }</span>
             </div>
           </div>
-          <MoreHorizIcon />
+          <MoreHorizIcon onClick={() => setMenuOpen(!menuOpen)} />
+          { menuOpen && post.userId === currentUser.id && (<button onClick={ handleDelete }>Delete</button>)}
         </div>
         <div className="content">
           <p>{post.description}</p>
